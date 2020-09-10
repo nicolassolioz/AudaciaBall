@@ -15,7 +15,7 @@ namespace AudaciaBallAPI.Services
 
         public MssqlRepository()
         {
-            
+
         }
 
         public string getPlayerName(int id)
@@ -92,32 +92,32 @@ namespace AudaciaBallAPI.Services
 
             var dataTable = new DataTable();
 
- 
-               string connectionString = ConfigurationManager.ConnectionStrings["MssqlDatabase"].ConnectionString;
 
-                    try
+            string connectionString = ConfigurationManager.ConnectionStrings["MssqlDatabase"].ConnectionString;
+
+            try
+            {
+                using (SqlConnection cn = new SqlConnection(connectionString))
+                {
+                    string query = "Select * From T_User Where uid = @uid";
+                    SqlCommand cmd = new SqlCommand(query, cn);
+                    cmd.Parameters.AddWithValue("@uid", id);
+
+                    cn.Open();
+
+                    using (SqlDataReader dr = cmd.ExecuteReader())
                     {
-                        using (SqlConnection cn = new SqlConnection(connectionString))
+                        if (dr.Read())
                         {
-                            string query = "Select * From T_User Where uid = @uid";
-                            SqlCommand cmd = new SqlCommand(query, cn);
-                            cmd.Parameters.AddWithValue("@uid", id);
-
-                            cn.Open();
-
-                            using (SqlDataReader dr = cmd.ExecuteReader())
-                            {
-                                if (dr.Read())
-                                {
-                                    username = (string)dr["username"];
-                                }
-                            }
+                            username = (string)dr["username"];
                         }
                     }
-                    catch (Exception e)
-                    {
-                        throw e;
-                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
             return username;
         }
 
@@ -145,7 +145,7 @@ namespace AudaciaBallAPI.Services
                     else
                     {
                         SqlDataReader dr = cmd.ExecuteReader();
-                        if(!dr.HasRows)
+                        if (!dr.HasRows)
                         { return null; }
                         else
                         {
@@ -180,6 +180,173 @@ namespace AudaciaBallAPI.Services
             return results;
         }
 
+        public List<Game> GetGames()
+        {
+            var ctx = HttpContext.Current;
+            List<Game> results = new List<Game>();
+
+            var dataTable = new DataTable();
+
+
+            string connectionString = ConfigurationManager.ConnectionStrings["MssqlDatabase"].ConnectionString;
+
+            try
+            {
+                using (SqlConnection cn = new SqlConnection(connectionString))
+                {
+                    string query = "Select * From T_Game";
+                    SqlCommand cmd = new SqlCommand(query, cn);
+
+                    cn.Open();
+                    if (cn.State == ConnectionState.Closed)
+                    { return null; }
+                    else
+                    {
+                        SqlDataReader dr = cmd.ExecuteReader();
+                        if (!dr.HasRows)
+                        { return null; }
+                        else
+                        {
+                            while (dr.HasRows)
+                            {
+                                while (dr.Read())
+                                {
+                                    Game game = new Game();
+                                    game.idGame = (int)dr["idGame"];
+                                    game.scoreBlue = (int)dr["scoreBlue"];
+                                    game.scoreRed = (int)dr["scoreRed"];
+                                    game.gameDate = (DateTime)dr["date"];
+                                    game.fk_idPlayerBlue = (int)dr["fk_idPlayerBlue"];
+                                    game.fk_idPlayerRed = (int)dr["fk_idPlayerRed"];
+
+                                    results.Add(game);
+                                }
+                                dr.NextResult();
+                            }
+                            if (!dr.IsClosed)
+                            { dr.Close(); }
+
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return results;
+        }
+
+        public List<Player> GetPlayers()
+        {
+            var ctx = HttpContext.Current;
+            List<Player> results = new List<Player>();
+
+            var dataTable = new DataTable();
+
+
+            string connectionString = ConfigurationManager.ConnectionStrings["MssqlDatabase"].ConnectionString;
+
+            try
+            {
+                using (SqlConnection cn = new SqlConnection(connectionString))
+                {
+                    string query = "Select * From T_Player WHERE fk_idTeam IS NULL";
+                    SqlCommand cmd = new SqlCommand(query, cn);
+
+                    cn.Open();
+                    if (cn.State == ConnectionState.Closed)
+                    { return null; }
+                    else
+                    {
+                        SqlDataReader dr = cmd.ExecuteReader();
+                        if (!dr.HasRows)
+                        { return null; }
+                        else
+                        {
+                            while (dr.HasRows)
+                            {
+                                while (dr.Read())
+                                {
+                                    Player player = new Player();
+                                    player.idPlayer = (int)dr["idPlayer"];
+                                    player.name = (string)dr["name"];
+
+                                    results.Add(player);
+                                }
+                                dr.NextResult();
+                            }
+                            if (!dr.IsClosed)
+                            { dr.Close(); }
+
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return results;
+        }
+
+        public List<Player> GetTeams()
+        {
+            var ctx = HttpContext.Current;
+            List<Player> results = new List<Player>();
+
+            var dataTable = new DataTable();
+
+
+            string connectionString = ConfigurationManager.ConnectionStrings["MssqlDatabase"].ConnectionString;
+
+            try
+            {
+                using (SqlConnection cn = new SqlConnection(connectionString))
+                {
+                    string query = "Select * From T_Player WHERE fk_idTeam IS NOT NULL";
+                    SqlCommand cmd = new SqlCommand(query, cn);
+
+                    cn.Open();
+                    if (cn.State == ConnectionState.Closed)
+                    { return null; }
+                    else
+                    {
+                        SqlDataReader dr = cmd.ExecuteReader();
+                        if (!dr.HasRows)
+                        { return null; }
+                        else
+                        {
+                            while (dr.HasRows)
+                            {
+                                while (dr.Read())
+                                {
+                                    Player player = new Player();
+                                    player.idPlayer = (int)dr["idPlayer"];
+                                    player.name = (string)dr["name"];
+
+                                    results.Add(player);
+                                }
+                                dr.NextResult();
+                            }
+                            if (!dr.IsClosed)
+                            { dr.Close(); }
+
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return results;
+        }
+
+
         public int AddAmount(int uid, int amount)
         {
             int result = 0;
@@ -187,7 +354,7 @@ namespace AudaciaBallAPI.Services
 
             try
             {
-                using(SqlConnection cn = new SqlConnection(connectionString))
+                using (SqlConnection cn = new SqlConnection(connectionString))
                 {
                     amount = this.getQuota(uid) + amount;
                     string query = "UPDATE T_User SET quota = @amount WHERE uid = @uid";
@@ -200,7 +367,7 @@ namespace AudaciaBallAPI.Services
                     cn.Close();
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw e;
             }
@@ -225,7 +392,36 @@ namespace AudaciaBallAPI.Services
                     cmd.ExecuteNonQuery();
                     cn.Close();
 
-                    
+
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public void AddGame(int scoreBlue, int scoreRed, int idPlayerBlue, int idPlayerRed)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["MssqlDatabase"].ConnectionString;
+            DateTime today = DateTime.Now;
+            try
+            {
+                using (SqlConnection cn = new SqlConnection(connectionString))
+                {
+                    string query = "INSERT INTO T_Game (scoreBlue, scoreRed, fk_idPlayerBlue, fk_idPlayerRed, date) VALUES (@scoreBlue, @scoreRed, @idPlayerBlue, @idPlayerRed, @gameDate)";
+                    SqlCommand cmd = new SqlCommand(query, cn);
+                    cmd.Parameters.AddWithValue("@scoreBlue", scoreBlue);
+                    cmd.Parameters.AddWithValue("@scoreRed", scoreRed);
+                    cmd.Parameters.AddWithValue("@idPlayerBlue", idPlayerBlue);
+                    cmd.Parameters.AddWithValue("@idPlayerRed", idPlayerRed);
+                    cmd.Parameters.AddWithValue("@gameDate", today);
+
+                    cn.Open();
+                    cmd.ExecuteNonQuery();
+                    cn.Close();
+
+
                 }
             }
             catch (Exception e)
@@ -324,7 +520,7 @@ namespace AudaciaBallAPI.Services
         {
             var ctx = HttpContext.Current;
 
-            if(ctx != null)
+            if (ctx != null)
             {
                 return (string[])ctx.Cache[CacheKey];
             }
@@ -334,27 +530,5 @@ namespace AudaciaBallAPI.Services
             return empty;
         }
 
-        public bool SaveMssql(Mssql mssql)
-        {
-            var ctx = HttpContext.Current;
-
-            if(ctx != null)
-            {
-                try
-                {
-                    var currentData = ((Mssql[])ctx.Cache[CacheKey]).ToList();
-                    currentData.Add(mssql);
-                    ctx.Cache[CacheKey] = currentData.ToArray();
-
-                    return true;
-                }
-                catch(Exception ex)
-                {
-                    Console.WriteLine(ex.ToString());
-                    return false;
-                }
-            }
-        return false;
-        }
     }
 }

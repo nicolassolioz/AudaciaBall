@@ -45,6 +45,16 @@ namespace AudaciaBallAPI.Controllers
             return "done";
         }
 
+        [System.Web.Http.Route("{scoreBlue:int}/{scoreRed:int}/{idPlayerBlue:int}/{idPlayerRed:int}")]
+        [System.Web.Http.HttpGet]
+        public string AddGame(int scoreBlue, int scoreRed, int idPlayerBlue, int idPlayerRed)
+        {
+            this.mssqlRepository = new MssqlRepository();
+            this.mssqlRepository.AddGame(scoreBlue, scoreRed, idPlayerBlue, idPlayerRed);
+ 
+            return "done";
+        }
+
         [System.Web.Http.Route("{int:idPlayer")]
         [System.Web.Http.HttpGet]
         public string GetGameHistory(int idPlayer)
@@ -61,6 +71,58 @@ namespace AudaciaBallAPI.Controllers
 
             return result;
         }
+
+        [System.Web.Http.Route("")]
+        [System.Web.Http.HttpGet]
+        public string GetGames()
+        {
+            this.mssqlRepository = new MssqlRepository(); 
+            List<Game> results = this.mssqlRepository.GetGames();
+            string result = "";
+
+            foreach (Game game in results)
+            {
+                result += game.idGame + " " + game.scoreBlue + " - " + game.scoreRed + "<br />";
+            }
+          
+
+            return result;
+        }
+
+        [System.Web.Http.Route("")]
+        [System.Web.Http.HttpGet]
+        public string GetPlayers()
+        {
+            this.mssqlRepository = new MssqlRepository();
+            List<Player> results = this.mssqlRepository.GetPlayers();
+            string result = "";
+
+            foreach (Player player in results)
+            {
+                result += player.idPlayer + " " + player.name + "<br />";
+            }
+
+
+            return result;
+        }
+
+        [System.Web.Http.Route("")]
+        [System.Web.Http.HttpGet]
+        public string GetTeams()
+        {
+            this.mssqlRepository = new MssqlRepository();
+            List<Player> results = this.mssqlRepository.GetTeams();
+            string result = "";
+
+            foreach (Player player in results)
+            {
+                result += player.idPlayer + " " + player.name + "<br />";
+            }
+
+
+            return result;
+        }
+
 
 
 

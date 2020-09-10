@@ -1,10 +1,16 @@
 {
   "ExpandedNodes": [
     "",
+    "\\api",
+    "\\api\\App_Start",
+    "\\api\\Controllers",
+    "\\api\\Services",
+    "\\ui",
     "\\ui\\src",
     "\\ui\\src\\components",
     "\\ui\\src\\router",
     "\\ui\\src\\views"
   ],
+  "SelectedNode": "\\api\\App_Start\\RouteConfig.cs",
   "PreviewInSolutionExplorer": false
 }

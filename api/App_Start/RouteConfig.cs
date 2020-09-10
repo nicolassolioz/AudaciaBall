@@ -33,6 +33,29 @@ namespace AudaciaBallAPI
                 defaults: new { controller = "Mssql", action = "GetGameHistory"}
             );
 
+            routes.MapRoute(
+                name: "GetGames",
+                url: "GetGames",
+                defaults: new { controller = "Mssql", action = "GetGames"}
+            );
+
+            routes.MapRoute(
+                name: "GetPlayers",
+                url: "GetPlayers",
+                defaults: new { controller = "Mssql", action = "GetPlayers" }
+            );
+
+            routes.MapRoute(
+                name: "GetTeams",
+                url: "GetTeams",
+                defaults: new { controller = "Mssql", action = "GetTeams" }
+            );
+
+            routes.MapRoute(
+                name: "AddGame",
+                url: "AddGame/{scoreBlue}/{scoreRed}/{idPlayerBlue}/{idPlayerRed}",
+                defaults: new { controller = "Mssql", action = "AddGame" }
+            );
         }
     }
 }
