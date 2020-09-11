@@ -215,7 +215,7 @@ namespace AudaciaBallAPI.Services
                                     game.idGame = (int)dr["idGame"];
                                     game.scoreBlue = (int)dr["scoreBlue"];
                                     game.scoreRed = (int)dr["scoreRed"];
-                                    game.gameDate = (DateTime)dr["date"];
+                                    game.gameDate = (DateTime)dr["gameDate"];
                                     game.fk_idPlayerBlue = (int)dr["fk_idPlayerBlue"];
                                     game.fk_idPlayerRed = (int)dr["fk_idPlayerRed"];
 
@@ -271,7 +271,7 @@ namespace AudaciaBallAPI.Services
                                 {
                                     Player player = new Player();
                                     player.idPlayer = (int)dr["idPlayer"];
-                                    player.name = (string)dr["name"];
+                                    player.name = (string)dr["playerName"];
 
                                     results.Add(player);
                                 }
@@ -325,7 +325,7 @@ namespace AudaciaBallAPI.Services
                                 {
                                     Player player = new Player();
                                     player.idPlayer = (int)dr["idPlayer"];
-                                    player.name = (string)dr["name"];
+                                    player.name = (string)dr["playerName"];
 
                                     results.Add(player);
                                 }
@@ -409,7 +409,7 @@ namespace AudaciaBallAPI.Services
             {
                 using (SqlConnection cn = new SqlConnection(connectionString))
                 {
-                    string query = "INSERT INTO T_Game (scoreBlue, scoreRed, fk_idPlayerBlue, fk_idPlayerRed, date) VALUES (@scoreBlue, @scoreRed, @idPlayerBlue, @idPlayerRed, @gameDate)";
+                    string query = "INSERT INTO T_Game (scoreBlue, scoreRed, fk_idPlayerBlue, fk_idPlayerRed, gameDate) VALUES (@scoreBlue, @scoreRed, @idPlayerBlue, @idPlayerRed, @gameDate)";
                     SqlCommand cmd = new SqlCommand(query, cn);
                     cmd.Parameters.AddWithValue("@scoreBlue", scoreBlue);
                     cmd.Parameters.AddWithValue("@scoreRed", scoreRed);
@@ -473,7 +473,7 @@ namespace AudaciaBallAPI.Services
             {
                 using (SqlConnection cn = new SqlConnection(connectionString))
                 {
-                    string query = "INSERT INTO T_Player (name) VALUES (@name)";
+                    string query = "INSERT INTO T_Player (playerName) VALUES (@name)";
                     SqlCommand cmd = new SqlCommand(query, cn);
                     cmd.Parameters.AddWithValue("@name", name);
 
@@ -498,7 +498,7 @@ namespace AudaciaBallAPI.Services
             {
                 using (SqlConnection cn = new SqlConnection(connectionString))
                 {
-                    string query = "INSERT INTO T_Player (name, fk_idTeam) VALUES (@name, @idTeam)";
+                    string query = "INSERT INTO T_Player (playerName, fk_idTeam) VALUES (@name, @idTeam)";
                     SqlCommand cmd = new SqlCommand(query, cn);
                     cmd.Parameters.AddWithValue("@name", name);
                     cmd.Parameters.AddWithValue("@idTeam", idTeam);

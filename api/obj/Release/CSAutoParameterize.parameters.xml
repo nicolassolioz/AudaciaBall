@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="MssqlDatabase-Web.config Connection String" description="MssqlDatabase Chaîne de connexion utilisée dans web.config par l’application pour accéder à la base de données." defaultValue="Server=tcp:audaciaball.database.windows.net,1433;Initial Catalog=AudaciaBallDb;Persist Security Info=False;User ID=nicolassolioz;Password=Audacia_Ball2020;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\Nicolas\ Solioz\\Documents\\Code\\AudaciaBall\\api\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='MssqlDatabase']/@connectionString" />
+  </parameter>
+</parameters>
