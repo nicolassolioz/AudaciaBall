@@ -157,7 +157,7 @@ namespace AudaciaBallAPI.Services
                                     game.idGame = (int)dr["idGame"];
                                     game.scoreBlue = (int)dr["scoreBlue"];
                                     game.scoreRed = (int)dr["scoreRed"];
-                                    game.gameDate = (DateTime)dr["date"];
+                                    game.gameDate = (DateTime)dr["gameDate"];
                                     game.fk_idPlayerBlue = (int)dr["fk_idPlayerBlue"];
                                     game.fk_idPlayerRed = (int)dr["fk_idPlayerRed"];
 

@@ -11,7 +11,10 @@ namespace AudaciaBallAPI
         {
             // Configuration et services API Web
 
+
             // Itinéraires de l'API Web
+            config.EnableCors();
+
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(

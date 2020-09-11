@@ -56,6 +56,12 @@ namespace AudaciaBallAPI
                 url: "AddGame/{scoreBlue}/{scoreRed}/{idPlayerBlue}/{idPlayerRed}",
                 defaults: new { controller = "Mssql", action = "AddGame" }
             );
+
+            routes.MapRoute(
+                name: "Test",
+                url: "Test",
+                defaults: new { controller = "Mssql", action = "Test" }
+            );
         }
     }
 }

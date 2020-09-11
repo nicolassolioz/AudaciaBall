@@ -62,6 +62,16 @@ const routes = [
         path: '/gameType',
         name: 'gameType',
         component: () => import('../views/GameType.vue')
+    },
+    {
+        path: '/managePlayers',
+        name: '/managePlayers',
+        component: () => import('../views/ManagePlayers.vue')
+    },
+    {
+        path: '/manageTeams',
+        name: '/manageTeams',
+        component: () => import('../views/ManageTeams.vue')
     }
     
 ]

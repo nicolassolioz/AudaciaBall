@@ -29,4 +29,16 @@
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+
+  .table-center {
+    margin-left:auto;
+    margin-right:auto;
+    column-gap:60px;
+    border: 1px solid black;
+    border-collapse: collapse;
+  }
+  td {
+    border: 1px solid black;
+  }
+
 </style>
