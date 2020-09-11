@@ -107,6 +107,16 @@ namespace AudaciaBallAPI.Controllers
   
         }
 
+        [System.Web.Http.Route("getPlayer/{id}")]
+        [System.Web.Http.HttpGet]
+        public Player GetPlayer(int id)
+        {
+            this.mssqlRepository = new MssqlRepository();
+            Player result = this.mssqlRepository.getPlayer(id);
+            return result;
+
+        }
+
         [System.Web.Http.Route("getTeams")]
         [System.Web.Http.HttpGet]
         public List<Player> GetTeams()

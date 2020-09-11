@@ -13,7 +13,7 @@
                 <tr v-for="info in infos" :key="info">
                     <td>{{info.idPlayer}}</td>
                     <td>{{info.name}}
-                    <td><router-link to="/gameHistory" tag="button">(?)</router-link></td>
+                    <td><router-link :to="'/gameHistory/' + info.idPlayer" tag="button">(?)</router-link></td>
                 </tr>
             </table>
         </div>

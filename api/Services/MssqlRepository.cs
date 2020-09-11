@@ -51,11 +51,10 @@ namespace AudaciaBallAPI.Services
             return playerName;
         }
 
-        public int getQuota(int id)
-        {
-            int quota = 0;
 
-            var dataTable = new DataTable();
+        public Player getPlayer(int id)
+        {
+            Player player = new Player();
 
 
             string connectionString = ConfigurationManager.ConnectionStrings["MssqlDatabase"].ConnectionString;
@@ -64,9 +63,9 @@ namespace AudaciaBallAPI.Services
             {
                 using (SqlConnection cn = new SqlConnection(connectionString))
                 {
-                    string query = "Select * From T_User Where uid = @uid";
+                    string query = "Select * From T_Player Where idPlayer = @id";
                     SqlCommand cmd = new SqlCommand(query, cn);
-                    cmd.Parameters.AddWithValue("@uid", id);
+                    cmd.Parameters.AddWithValue("@id", id);
 
                     cn.Open();
 
@@ -74,7 +73,9 @@ namespace AudaciaBallAPI.Services
                     {
                         if (dr.Read())
                         {
-                            quota = (int)dr["quota"];
+                            player = new Player();
+                            player.idPlayer = (int)dr["idPlayer"];
+                            player.name = (string)dr["playerName"];
                         }
                     }
                 }
@@ -83,42 +84,7 @@ namespace AudaciaBallAPI.Services
             {
                 throw e;
             }
-            return quota;
-        }
-        public string getUsername(int id)
-        {
-            var ctx = HttpContext.Current;
-            string username = "";
-
-            var dataTable = new DataTable();
-
-
-            string connectionString = ConfigurationManager.ConnectionStrings["MssqlDatabase"].ConnectionString;
-
-            try
-            {
-                using (SqlConnection cn = new SqlConnection(connectionString))
-                {
-                    string query = "Select * From T_User Where uid = @uid";
-                    SqlCommand cmd = new SqlCommand(query, cn);
-                    cmd.Parameters.AddWithValue("@uid", id);
-
-                    cn.Open();
-
-                    using (SqlDataReader dr = cmd.ExecuteReader())
-                    {
-                        if (dr.Read())
-                        {
-                            username = (string)dr["username"];
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-            return username;
+            return player;
         }
 
         public List<Game> GetGameHistory(int idPlayer)
@@ -346,34 +312,6 @@ namespace AudaciaBallAPI.Services
             return results;
         }
 
-
-        public int AddAmount(int uid, int amount)
-        {
-            int result = 0;
-            string connectionString = ConfigurationManager.ConnectionStrings["MssqlDatabase"].ConnectionString;
-
-            try
-            {
-                using (SqlConnection cn = new SqlConnection(connectionString))
-                {
-                    amount = this.getQuota(uid) + amount;
-                    string query = "UPDATE T_User SET quota = @amount WHERE uid = @uid";
-                    SqlCommand cmd = new SqlCommand(query, cn);
-                    cmd.Parameters.AddWithValue("@amount", amount);
-                    cmd.Parameters.AddWithValue("@uid", uid);
-
-                    cn.Open();
-                    result = cmd.ExecuteNonQuery();
-                    cn.Close();
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-
-            return this.getQuota(uid);
-        }
 
         public void AddTeam(int idPlayer1, int idPlayer2)
         {

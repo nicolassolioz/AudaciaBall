@@ -54,7 +54,7 @@ const routes = [
         component: () => import('../views/Game.vue')
     },
     {
-        path: '/gameHistory',
+        path: '/gameHistory/:id',
         name: 'gameHistory',
         component: () => import('../views/GameHistory.vue')
     },

@@ -16,7 +16,7 @@
                 <td><button type="button" @click="addBlue()">+</button></td>
                 <td><button type="button" @click="removeBlue()">-</button></td>
                 <td><button type="button" @click="addRed()">+</button></td>
-                <td><button type="button" @click="removeRed()">+</button></td>
+                <td><button type="button" @click="removeRed()">-</button></td>
             </tr>
         </table>
         </form>
