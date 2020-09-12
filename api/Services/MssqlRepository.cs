@@ -1,4 +1,9 @@
-﻿using System;
+﻿//created by Nicolas Solioz
+//last modified 2020-09-12
+
+//this is the data layer where we access directly the database with our saved connection string in web.config
+
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -18,6 +23,8 @@ namespace AudaciaBallAPI.Services
 
         }
 
+        //getPlayerName from database, used with GamePlayer lists in order to return the name of the player with the games, 
+        //this means we don't have to consume an extra API query on the front end
         public string getPlayerName(int id)
         {
             string playerName = "";
@@ -51,7 +58,7 @@ namespace AudaciaBallAPI.Services
             return playerName;
         }
 
-
+        //retrieve player from database based on given identifier (idPlayer)
         public Player getPlayer(int id)
         {
             Player player = new Player();
@@ -87,6 +94,7 @@ namespace AudaciaBallAPI.Services
             return player;
         }
 
+        //get all games and the name of their players based on the given parameter (idPlayer
         public List<GamePlayer> GetGameHistory(int idPlayer)
         {
             var ctx = HttpContext.Current;
@@ -148,6 +156,7 @@ namespace AudaciaBallAPI.Services
             return results;
         }
 
+        //get all games from database
         public List<Game> GetGames()
         {
             var ctx = HttpContext.Current;
@@ -206,6 +215,7 @@ namespace AudaciaBallAPI.Services
             return results;
         }
 
+        //Get all games and their players
         public List<GamePlayer> GetGamesPlayers()
         {
             var ctx = HttpContext.Current;
@@ -266,6 +276,7 @@ namespace AudaciaBallAPI.Services
             return results;
         }
 
+        //get all players from database
         public List<Player> GetPlayers()
         {
             var ctx = HttpContext.Current;
@@ -320,6 +331,7 @@ namespace AudaciaBallAPI.Services
             return results;
         }
 
+        //get all teams from database
         public List<Player> GetTeams()
         {
             var ctx = HttpContext.Current;
@@ -374,7 +386,7 @@ namespace AudaciaBallAPI.Services
             return results;
         }
 
-
+        //add a team to the database
         public void AddTeam(int idPlayer1, int idPlayer2)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["MssqlDatabase"].ConnectionString;
@@ -401,6 +413,7 @@ namespace AudaciaBallAPI.Services
             }
         }
 
+        //get game statistics from database
         public List<GameStats> GetGamesStats()
         {
             List<GameStats> results = new List<GameStats>();
@@ -466,6 +479,7 @@ namespace AudaciaBallAPI.Services
             return results;
         }
 
+        //add game to database
         public void AddGame(int scoreBlue, int scoreRed, int idPlayerBlue, int idPlayerRed)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["MssqlDatabase"].ConnectionString;
@@ -495,6 +509,7 @@ namespace AudaciaBallAPI.Services
             }
         }
 
+        //retrieve the last inserted team in the database
         public int GetLastInsertedTeam()
         {
             var ctx = HttpContext.Current;
@@ -530,6 +545,7 @@ namespace AudaciaBallAPI.Services
             return idTeam;
         }
 
+        //add a player to the database
         public void AddPlayer(string name)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["MssqlDatabase"].ConnectionString;
@@ -554,6 +570,7 @@ namespace AudaciaBallAPI.Services
 
         }
 
+        //add a team to the database
         public int AddPlayerTeam(string name, int idTeam)
         {
             int result = 0;
@@ -579,20 +596,6 @@ namespace AudaciaBallAPI.Services
             }
 
             return 1;
-        }
-
-        public string[] GetAllMssqlRows()
-        {
-            var ctx = HttpContext.Current;
-
-            if (ctx != null)
-            {
-                return (string[])ctx.Cache[CacheKey];
-            }
-
-            string[] empty = new string[1];
-            empty[0] = "empty";
-            return empty;
         }
 
     }

@@ -1,4 +1,9 @@
-﻿using AudaciaBallAPI.Models;
+﻿//created by Nicolas Solioz
+//last modified 2020-09-12
+
+//This is the business layer
+
+using AudaciaBallAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,30 +17,14 @@ using System.Net.Http;
 
 namespace AudaciaBallAPI.Controllers
 {
+    //allow specific url to access the API
     [EnableCors(origins: "http://localhost:8080", headers: "*", methods: "*")]
     public class MssqlController : ApiController
     {
+        //use repository to access data layer
         private MssqlRepository mssqlRepository;
 
-        [System.Web.Http.Route("test")]
-        [System.Web.Http.HttpGet]
-        public HttpResponseMessage Test()
-        {
-            this.mssqlRepository = new MssqlRepository();
-            List<Player> results = this.mssqlRepository.GetPlayers();
-            string playerNames = "";
-            foreach (Player player in results)
-            {
-                playerNames += player.name + ' ';
-            }
-
-            return new HttpResponseMessage()
-            {
-                Content = new StringContent(playerNames)
-            };
-        }
-
-
+        //add name to database
         [System.Web.Http.Route("addPlayer/{name}")]
         [System.Web.Http.HttpGet]
         public HttpResponseMessage AddPlayer(string name)
@@ -49,7 +38,7 @@ namespace AudaciaBallAPI.Controllers
             };
         }
 
-
+        //add team to database
         [System.Web.Http.Route("addTeam/{name}/{idPlayer1}/{idPlayer2}")]
         [System.Web.Http.HttpGet]
         public HttpResponseMessage AddTeam(string name, int idPlayer1, int idPlayer2)
@@ -64,6 +53,7 @@ namespace AudaciaBallAPI.Controllers
             };
         }
 
+        //add game to database
         [System.Web.Http.Route("addGame/{scoreBlue}/{scoreRed}/{idPlayerBlue}/{idPlayerRed}")]
         [System.Web.Http.HttpGet]
         public HttpResponseMessage AddGame(int scoreBlue, int scoreRed, int idPlayerBlue, int idPlayerRed)
@@ -77,6 +67,7 @@ namespace AudaciaBallAPI.Controllers
             };
         }
 
+        //retrieve game history from database
         [System.Web.Http.Route("getGameHistory/{idPlayer}")]
         [System.Web.Http.HttpGet]
         public List<GamePlayer> GetGameHistory(int idPlayer)
@@ -87,6 +78,7 @@ namespace AudaciaBallAPI.Controllers
             return results;
         }
 
+        //retrieve games from database
         [System.Web.Http.Route("getGames")]
         [System.Web.Http.HttpGet]
         public List<GamePlayer> GetGames()
@@ -97,6 +89,7 @@ namespace AudaciaBallAPI.Controllers
 
         }
 
+        //retrieve game statistics from database
         [System.Web.Http.Route("getGamesStats")]
         [System.Web.Http.HttpGet]
         public List<GameStats> GetGamesStats()
@@ -107,7 +100,7 @@ namespace AudaciaBallAPI.Controllers
 
         }
 
-
+        //retrieve players from database
         [System.Web.Http.Route("getPlayers")]
         [System.Web.Http.HttpGet]
         public List<Player> GetPlayers()
@@ -118,6 +111,7 @@ namespace AudaciaBallAPI.Controllers
   
         }
 
+        //retrieve player based on given identifier
         [System.Web.Http.Route("getPlayer/{id}")]
         [System.Web.Http.HttpGet]
         public Player GetPlayer(int id)
@@ -128,6 +122,7 @@ namespace AudaciaBallAPI.Controllers
 
         }
 
+        //get teams from database
         [System.Web.Http.Route("getTeams")]
         [System.Web.Http.HttpGet]
         public List<Player> GetTeams()
@@ -137,10 +132,6 @@ namespace AudaciaBallAPI.Controllers
             return results;
 
         }
-
-
-
-
 
     }
 }
