@@ -276,6 +276,60 @@ namespace AudaciaBallAPI.Services
             return results;
         }
 
+        public List<Player> GetAllPlayers()
+        {
+            var ctx = HttpContext.Current;
+            List<Player> results = new List<Player>();
+
+            var dataTable = new DataTable();
+
+
+            string connectionString = ConfigurationManager.ConnectionStrings["MssqlDatabase"].ConnectionString;
+
+            try
+            {
+                using (SqlConnection cn = new SqlConnection(connectionString))
+                {
+                    string query = "Select * From T_Player";
+                    SqlCommand cmd = new SqlCommand(query, cn);
+
+                    cn.Open();
+                    if (cn.State == ConnectionState.Closed)
+                    { return null; }
+                    else
+                    {
+                        SqlDataReader dr = cmd.ExecuteReader();
+                        if (!dr.HasRows)
+                        { return null; }
+                        else
+                        {
+                            while (dr.HasRows)
+                            {
+                                while (dr.Read())
+                                {
+                                    Player player = new Player();
+                                    player.idPlayer = (int)dr["idPlayer"];
+                                    player.name = (string)dr["playerName"];
+
+                                    results.Add(player);
+                                }
+                                dr.NextResult();
+                            }
+                            if (!dr.IsClosed)
+                            { dr.Close(); }
+
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return results;
+        }
+
         //get all players from database
         public List<Player> GetPlayers()
         {
@@ -417,9 +471,9 @@ namespace AudaciaBallAPI.Services
         public List<GameStats> GetGamesStats()
         {
             List<GameStats> results = new List<GameStats>();
-            List<Player> players = GetPlayers();
+            List<Player> players = GetAllPlayers();
 
-            for(int i = 0; i<players.Count; i++)
+            for (int i = 0; i < players.Count; i++)
             {
                 //variables used to count victories/losses
                 int wins = 0;
@@ -438,7 +492,7 @@ namespace AudaciaBallAPI.Services
                 else
                     gameStats.gamesPlayed = playedGames.Count;
 
-                for(int y = 0;y< gameStats.gamesPlayed; y++)
+                for (int y = 0; y < gameStats.gamesPlayed; y++)
                 {
                     int gf = 0;
                     int ga = 0;
@@ -598,5 +652,186 @@ namespace AudaciaBallAPI.Services
             return 1;
         }
 
+        //add a team to the database
+        public string emptyDatabase()
+        {
+            string result = "not finished";
+            //remove constraints
+            removeConstraintTeam();
+            removeConstraintGame();
+            removeConstraintPlayer();
+
+            //empty tables
+            deleteTeams();
+            deleteGames();
+            deletePlayers();
+
+            return result;
+        }
+
+        public void deleteTeams()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["MssqlDatabase"].ConnectionString;
+
+            try
+            {
+                using (SqlConnection cn = new SqlConnection(connectionString))
+                {
+                    string query = "DELETE FROM T_Team WHERE idTeam<10000";
+                    SqlCommand cmd = new SqlCommand(query, cn);
+
+                    cn.Open();
+                    cmd.ExecuteNonQuery();
+                    cn.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public void deletePlayers()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["MssqlDatabase"].ConnectionString;
+
+            try
+            {
+                using (SqlConnection cn = new SqlConnection(connectionString))
+                {
+                    string query = "DELETE FROM T_Player WHERE idPlayer<10000";
+                    SqlCommand cmd = new SqlCommand(query, cn);
+
+                    cn.Open();
+                    cmd.ExecuteNonQuery();
+                    cn.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public void deleteGames()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["MssqlDatabase"].ConnectionString;
+
+            try
+            {
+                using (SqlConnection cn = new SqlConnection(connectionString))
+                {
+                    string query = "DELETE FROM T_Game WHERE idGame<10000;";
+                    SqlCommand cmd = new SqlCommand(query, cn);
+
+                    cn.Open();
+                    cmd.ExecuteNonQuery();
+                    cn.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+        }
+
+        public void removeConstraintPlayer()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["MssqlDatabase"].ConnectionString;
+
+            try
+            {
+                using (SqlConnection cn = new SqlConnection(connectionString))
+                {
+                    string query = "ALTER TABLE T_Player NOCHECK CONSTRAINT ALL;";
+                    SqlCommand cmd = new SqlCommand(query, cn);
+
+                    cn.Open();
+                    cmd.ExecuteNonQuery();
+                    cn.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public void removeConstraintTeam()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["MssqlDatabase"].ConnectionString;
+
+            try
+            {
+                using (SqlConnection cn = new SqlConnection(connectionString))
+                {
+                    string query = "ALTER TABLE T_Team NOCHECK CONSTRAINT ALL;";
+                    SqlCommand cmd = new SqlCommand(query, cn);
+
+                    cn.Open();
+                    cmd.ExecuteNonQuery();
+                    cn.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        public void removeConstraintGame()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["MssqlDatabase"].ConnectionString;
+
+            try
+            {
+                using (SqlConnection cn = new SqlConnection(connectionString))
+                {
+                    string query = "ALTER TABLE T_Game NOCHECK CONSTRAINT ALL;";
+                    SqlCommand cmd = new SqlCommand(query, cn);
+
+                    cn.Open();
+                    cmd.ExecuteNonQuery();
+                    cn.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+        public void initDatabase()
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["MssqlDatabase"].ConnectionString;
+
+            try
+            {
+                using (SqlConnection cn = new SqlConnection(connectionString))
+                {
+                    string query =
+                        "CREATE TABLE T_Player (idPlayer int IDENTITY(1,1) NOT NULL PRIMARY KEY,playerName varchar(255) NOT NULL,fk_idTeam int);" +
+
+                        "CREATE TABLE T_Team(idTeam int IDENTITY(1, 1) NOT NULL PRIMARY KEY,fk_idPlayer1 int NOT NULL,fk_idPlayer2 int NOT NULL," +
+                        "FOREIGN KEY(fk_idPlayer1) REFERENCES T_Player(idPlayer),FOREIGN KEY(fk_idPlayer2) REFERENCES T_Player(idPlayer));" +
+
+                        "CREATE TABLE T_Game(idGame int IDENTITY(1, 1) NOT NULL PRIMARY KEY,scoreBlue int NOT NULL,scoreRed int NOT NULL," +
+                        "fk_idPlayerBlue int NOT NULL,fk_idPlayerRed int NOT NULL,gameDate DateTime NOT NULL," +
+                        "FOREIGN KEY(fk_idPlayerBlue) REFERENCES T_Player(idPlayer)," +
+                        "FOREIGN KEY(fk_idPlayerRed) REFERENCES T_Player(idPlayer));" +
+
+                        "ALTER TABLE T_Player ADD fk_idTeam int;" +
+                        "ALTER TABLE T_Player ADD CONSTRAINT fk_idTeam FOREIGN KEY(fk_idTeam) REFERENCES T_Team(idTeam);";
+                    SqlCommand cmd = new SqlCommand(query, cn);
+
+                    cn.Open();
+                    cmd.ExecuteNonQuery();
+                    cn.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

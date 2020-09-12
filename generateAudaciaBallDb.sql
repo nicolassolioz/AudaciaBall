@@ -1,6 +1,7 @@
 CREATE TABLE T_Player (
 idPlayer int IDENTITY(1,1) NOT NULL PRIMARY KEY,
-playerName varchar(255) NOT NULL
+playerName varchar(255) NOT NULL,
+fk_idTeam int
 );
 
 CREATE TABLE T_Team (

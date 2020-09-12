@@ -18,7 +18,7 @@ using System.Net.Http;
 namespace AudaciaBallAPI.Controllers
 {
     //allow specific url to access the API
-    [EnableCors(origins: "https://audaciaballui.herokuapp.com/", headers: "*", methods: "*")]
+    [EnableCors(origins: "https://audaciaballui.herokuapp.com", headers: "*", methods: "*")]
     public class MssqlController : ApiController
     {
         //use repository to access data layer
@@ -132,6 +132,28 @@ namespace AudaciaBallAPI.Controllers
             return results;
 
         }
+
+        //get teams from database
+        [System.Web.Http.Route("emptyDb")]
+        [System.Web.Http.HttpGet]
+        public string emptyDatabase()
+        {
+            this.mssqlRepository = new MssqlRepository();
+            string result = this.mssqlRepository.emptyDatabase();
+            return "The database was emptied.";
+        }
+
+        //create all tables
+        [System.Web.Http.Route("createDb")]
+        [System.Web.Http.HttpGet]
+        public string initDatabase()
+        {
+            this.mssqlRepository = new MssqlRepository();
+            this.mssqlRepository.initDatabase();
+            return "The database was created.";
+        }
+
+
 
     }
 }
