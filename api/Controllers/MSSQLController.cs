@@ -12,7 +12,7 @@ using System.Net.Http;
 
 namespace AudaciaBallAPI.Controllers
 {
-    [EnableCors(origins: "http://localhost:8080", headers: "*", methods: "*")]
+    [EnableCors(origins: "https://audaciaballui.herokuapp.com", headers: "*", methods: "*")]
     public class MssqlController : ApiController
     {
         private MssqlRepository mssqlRepository;
