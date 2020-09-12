@@ -18,7 +18,7 @@ using System.Net.Http;
 namespace AudaciaBallAPI.Controllers
 {
     //allow specific url to access the API
-    [EnableCors(origins: "http://localhost:8080", headers: "*", methods: "*")]
+    [EnableCors(origins: "https://audaciaballui.herokuapp.com/", headers: "*", methods: "*")]
     public class MssqlController : ApiController
     {
         //use repository to access data layer
