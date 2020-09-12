@@ -2,26 +2,37 @@
     <div class="about">
         <h1>Game</h1>
         <br /><br />
-        <form>
-        <table class="table-center">
-            <tr style="font-size: 100px;">
-                <th colspan="2" style="padding-right: 50px; text-align: center;" id="scoreBlue">
-                    <input type="text" id="pointsBlue" :value="scoreBlue"/>
-                </th>
-                <th colspan="2" style="padding-left: 50px;" id="scoreRed">
-                    <input type="text" id="pointsRed" :value="scoreRed"/>
-                </th>
-            </tr>
-            <tr>
-                <td><button type="button" @click="addBlue()">+</button></td>
-                <td><button type="button" @click="removeBlue()">-</button></td>
-                <td><button type="button" @click="addRed()">+</button></td>
-                <td><button type="button" @click="removeRed()">-</button></td>
-            </tr>
-        </table>
+        <form @submit.stop.prevent="addGame()">
+            <table class="table-center">
+                <tr>
+                    <td colspan="2" style="text-align: center;">
+                        <h1 style="text-align:center;">Blue team</h1>
+                    </td>
+                    <td colspan="2" style="text-align: center;">
+                        <h1>Red team</h1>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" id="pointsBlue">
+                        <input type="text" id="scoreBlue" :value="scoreBlue" disabled="disabled" style="text-align: center; font-size:30px; width:50px"/>
+                    </td>
+                    <td colspan="2" id="pointsRed">
+                        <input type="text" id="scoreRed" :value="scoreRed" disabled="disabled" style="text-align: center; font-size:30px; width:50px"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td><button type="button" @click="addBlue()" class="baseButton">+</button></td>
+                    <td><button type="button" @click="removeBlue()" class="baseButton">-</button></td>
+                    <td><button type="button" @click="addRed()" class="baseButton">+</button></td>
+                    <td><button type="button" @click="removeRed()" class="baseButton">-</button></td>
+                </tr>
+            </table>
+
+            <br />
+            <button class="baseButton">End game</button>
+            <router-link to="/" tag="button" class="baseButton">Quit game</router-link>
         </form>
         <br /><br />
-        <router-link to="/endGame">End Game</router-link>
     </div>
 </template>
 <script>
@@ -42,43 +53,56 @@
             axios
                 .get("https://audaciaballapi20200911031401.azurewebsites.net/GetTeams")
                 .then(response => (this.infos = response.data))
+
+            this.scoreBlue = this.$route.params.scoreBlue;
+            this.scoreRed = this.$route.params.scoreRed;
         },
         methods: {
             addBlue() {
-                var value = parseInt(document.getElementById('pointsBlue').value, 10);
+                var value = parseInt(document.getElementById('scoreBlue').value, 10);
                 value = isNaN(value) ? 0 : value;
                 if(value == 10)
                     return;
                 value++;
-                document.getElementById('pointsBlue').value = value;
+                document.getElementById('scoreBlue').value = value;
             },
             addRed() {
-                var value = parseInt(document.getElementById('pointsRed').value, 10);
+                var value = parseInt(document.getElementById('scoreRed').value, 10);
                 value = isNaN(value) ? 0 : value;
                 if(value == 10)
                     return;
                 value++;
-                document.getElementById('pointsRed').value = value;
+                document.getElementById('scoreRed').value = value;
             },
             removeBlue() {
-                var value = parseInt(document.getElementById('pointsBlue').value, 10);
+                var value = parseInt(document.getElementById('scoreBlue').value, 10);
                 value = isNaN(value) ? 0 : value;
                 if(value == 0)
                     return;
                 value--;
-                document.getElementById('pointsBlue').value = value;
+                document.getElementById('scoreBlue').value = value;
             },
             removeRed() {
-                var value = parseInt(document.getElementById('pointsRed').value, 10);
+                var value = parseInt(document.getElementById('scoreRed').value, 10);
                 value = isNaN(value) ? 0 : value;
                 if(value == 0)
                     return;
                 value--;
-                document.getElementById('pointsRed').value = value;
+                document.getElementById('scoreRed').value = value;
+            },
+            addGame() {
+                var scoreBlue = document.getElementById("scoreBlue").value;
+                var scoreRed = document.getElementById("scoreRed").value;
+                var idPlayerBlue = this.$route.params.idPlayerBlue;
+                var idPlayerRed = this.$route.params.idPlayerRed;
+
+                axios
+                    .get("https://audaciaballapi20200911031401.azurewebsites.net/AddGame/"+scoreBlue+"/"+scoreRed+"/"+idPlayerBlue+"/"+idPlayerRed)
+                    .then(response => {
+                        window.location.href = '/EndGame/'+scoreBlue+'/'+scoreRed+'/'+idPlayerBlue+'/'+idPlayerRed;
+                        console.log(response);
+                    })
             }
         }
     }
-
-
-
 </script>

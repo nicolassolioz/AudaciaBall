@@ -44,12 +44,12 @@ const routes = [
         component: () => import('../views/ChoosePlayers.vue')
     },
     {
-        path: '/endGame',
+        path: '/endGame/:scoreBlue/:scoreRed/:idPlayerBlue/:idPlayerRed',
         name: 'endGame',
         component: () => import('../views/EndGame.vue')
     },
     {
-        path: '/game',
+        path: '/game/:scoreBlue/:scoreRed/:idPlayerBlue/:idPlayerRed',
         name: 'game',
         component: () => import('../views/Game.vue')
     },
@@ -65,13 +65,18 @@ const routes = [
     },
     {
         path: '/managePlayers',
-        name: '/managePlayers',
+        name: 'managePlayers',
         component: () => import('../views/ManagePlayers.vue')
     },
     {
         path: '/manageTeams',
-        name: '/manageTeams',
+        name: 'manageTeams',
         component: () => import('../views/ManageTeams.vue')
+    },
+    {
+        path: '/totalGameHistory',
+        name: 'totalGameHistory',
+        component: () => import('../views/TotalGameHistory.vue')
     }
     
 ]

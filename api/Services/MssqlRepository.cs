@@ -87,7 +87,68 @@ namespace AudaciaBallAPI.Services
             return player;
         }
 
-        public List<Game> GetGameHistory(int idPlayer)
+        public List<GamePlayer> GetGameHistory(int idPlayer)
+        {
+            var ctx = HttpContext.Current;
+            List<GamePlayer> results = new List<GamePlayer>();
+
+            var dataTable = new DataTable();
+
+
+            string connectionString = ConfigurationManager.ConnectionStrings["MssqlDatabase"].ConnectionString;
+
+            try
+            {
+                using (SqlConnection cn = new SqlConnection(connectionString))
+                {
+                    string query = "Select * From T_Game Where fk_idPlayerBlue = @idPlayer OR fk_idPlayerRed = @idPlayer ORDER BY gameDate DESC";
+                    SqlCommand cmd = new SqlCommand(query, cn);
+                    cmd.Parameters.AddWithValue("@idPlayer", idPlayer);
+
+                    cn.Open();
+                    if (cn.State == ConnectionState.Closed)
+                    { return null; }
+                    else
+                    {
+                        SqlDataReader dr = cmd.ExecuteReader();
+                        if (!dr.HasRows)
+                        { return null; }
+                        else
+                        {
+                            while (dr.HasRows)
+                            {
+                                while (dr.Read())
+                                {
+                                    GamePlayer gamePlayer = new GamePlayer();
+                                    gamePlayer.idGame = (int)dr["idGame"];
+                                    gamePlayer.scoreBlue = (int)dr["scoreBlue"];
+                                    gamePlayer.scoreRed = (int)dr["scoreRed"];
+                                    gamePlayer.gameDate = (DateTime)dr["gameDate"];
+                                    gamePlayer.fk_idPlayerBlue = (int)dr["fk_idPlayerBlue"];
+                                    gamePlayer.fk_idPlayerRed = (int)dr["fk_idPlayerRed"];
+                                    gamePlayer.namePlayerBlue = (string)getPlayerName((int)dr["fk_idPlayerBlue"]);
+                                    gamePlayer.namePlayerRed = (string)getPlayerName((int)dr["fk_idPlayerRed"]);
+
+                                    results.Add(gamePlayer);
+                                }
+                                dr.NextResult();
+                            }
+                            if (!dr.IsClosed)
+                            { dr.Close(); }
+
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return results;
+        }
+
+        public List<Game> GetGames()
         {
             var ctx = HttpContext.Current;
             List<Game> results = new List<Game>();
@@ -101,9 +162,8 @@ namespace AudaciaBallAPI.Services
             {
                 using (SqlConnection cn = new SqlConnection(connectionString))
                 {
-                    string query = "Select * From T_Game Where fk_idPlayerBlue = @idPlayer OR fk_idPlayerRed = @idPlayer";
+                    string query = "Select * From T_Game ORDER BY date DESC";
                     SqlCommand cmd = new SqlCommand(query, cn);
-                    cmd.Parameters.AddWithValue("@idPlayer", idPlayer);
 
                     cn.Open();
                     if (cn.State == ConnectionState.Closed)
@@ -146,10 +206,10 @@ namespace AudaciaBallAPI.Services
             return results;
         }
 
-        public List<Game> GetGames()
+        public List<GamePlayer> GetGamesPlayers()
         {
             var ctx = HttpContext.Current;
-            List<Game> results = new List<Game>();
+            List<GamePlayer> results = new List<GamePlayer>();
 
             var dataTable = new DataTable();
 
@@ -160,7 +220,7 @@ namespace AudaciaBallAPI.Services
             {
                 using (SqlConnection cn = new SqlConnection(connectionString))
                 {
-                    string query = "Select * From T_Game";
+                    string query = "Select * From T_Game ORDER BY gameDate DESC";
                     SqlCommand cmd = new SqlCommand(query, cn);
 
                     cn.Open();
@@ -177,15 +237,17 @@ namespace AudaciaBallAPI.Services
                             {
                                 while (dr.Read())
                                 {
-                                    Game game = new Game();
-                                    game.idGame = (int)dr["idGame"];
-                                    game.scoreBlue = (int)dr["scoreBlue"];
-                                    game.scoreRed = (int)dr["scoreRed"];
-                                    game.gameDate = (DateTime)dr["gameDate"];
-                                    game.fk_idPlayerBlue = (int)dr["fk_idPlayerBlue"];
-                                    game.fk_idPlayerRed = (int)dr["fk_idPlayerRed"];
+                                    GamePlayer gamePlayer = new GamePlayer();
+                                    gamePlayer.idGame = (int)dr["idGame"];
+                                    gamePlayer.scoreBlue = (int)dr["scoreBlue"];
+                                    gamePlayer.scoreRed = (int)dr["scoreRed"];
+                                    gamePlayer.gameDate = (DateTime)dr["gameDate"];
+                                    gamePlayer.fk_idPlayerBlue = (int)dr["fk_idPlayerBlue"];
+                                    gamePlayer.fk_idPlayerRed = (int)dr["fk_idPlayerRed"];
+                                    gamePlayer.namePlayerBlue = getPlayerName((int)dr["fk_idPlayerBlue"]);
+                                    gamePlayer.namePlayerRed = getPlayerName((int)dr["fk_idPlayerRed"]);
 
-                                    results.Add(game);
+                                    results.Add(gamePlayer);
                                 }
                                 dr.NextResult();
                             }
@@ -337,6 +399,71 @@ namespace AudaciaBallAPI.Services
             {
                 throw e;
             }
+        }
+
+        public List<GameStats> GetGamesStats()
+        {
+            List<GameStats> results = new List<GameStats>();
+            List<Player> players = GetPlayers();
+
+            for(int i = 0; i<players.Count; i++)
+            {
+                //variables used to count victories/losses
+                int wins = 0;
+                int losses = 0;
+                int ties = 0;
+
+                //save player name
+                GameStats gameStats = new GameStats();
+                gameStats.idPlayer = players[i].idPlayer;
+                gameStats.playerName = players[i].name;
+
+                //loop through game history of player
+                List<GamePlayer> playedGames = GetGameHistory(players[i].idPlayer);
+                if (playedGames == null)
+                    gameStats.gamesPlayed = 0;
+                else
+                    gameStats.gamesPlayed = playedGames.Count;
+
+                for(int y = 0;y< gameStats.gamesPlayed; y++)
+                {
+                    int gf = 0;
+                    int ga = 0;
+                    //checkTeam
+                    if (playedGames[y].fk_idPlayerBlue == players[i].idPlayer)
+                    {
+                        //player was on blue team
+                        gf += playedGames[y].scoreBlue;
+                        ga += playedGames[y].scoreRed;
+                        if (gf > ga)
+                            wins++;
+                        if (ga > gf)
+                            losses++;
+                        if (gf == ga)
+                            ties++;
+                    }
+                    else
+                    {
+                        //player was on red team
+                        gf += playedGames[y].scoreRed;
+                        ga += playedGames[y].scoreBlue;
+                        if (gf > ga)
+                            wins++;
+                        if (ga > gf)
+                            losses++;
+                        if (gf == ga)
+                            ties++;
+                    }
+                    gameStats.gf += gf;
+                    gameStats.ga += ga;
+                }
+                gameStats.wins = wins;
+                gameStats.losses = losses;
+                gameStats.ties = ties;
+                results.Add(gameStats);
+            }
+
+            return results;
         }
 
         public void AddGame(int scoreBlue, int scoreRed, int idPlayerBlue, int idPlayerRed)

@@ -1,6 +1,7 @@
 <template>
     <div class="home">
-        <h1>Game History of {{player.name}}</h1>
+        <h1>All games played</h1>
+        <div id="loader" class="table-center"></div>
         <div id="scoreboard" style="overflow-x:auto;">
             <table id="table" class="table-center">
                 <tr>
@@ -29,27 +30,33 @@
     import axios from 'axios';
 
     export default {
+        name: 'Example component',
+        el: "#table",
         data () {
             return {
                 infos: null,
-                player: null
+                playerName: null
             }
         },
         mounted () {
+            document.getElementById("scoreboard").hidden = true;
             axios
-                .get("https://audaciaballapi20200911031401.azurewebsites.net/GetGameHistory/" + this.$route.params.id)
+                .get("https://audaciaballapi20200911031401.azurewebsites.net/GetGames")
                 .then((response) => {
                     this.infos = response.data;
-
+                    document.getElementById("loader").hidden = true;
+                    document.getElementById("scoreboard").hidden = false;
                 })
 
-            axios
-                .get("https://audaciaballapi20200911031401.azurewebsites.net/GetPlayer/" + this.$route.params.id)
-                .then((response) => {
-                    this.player = response.data;
+        },
+        methods: {
 
-            })
+        },
+        computed: {
+
         }
     }
+
+
 
 </script>

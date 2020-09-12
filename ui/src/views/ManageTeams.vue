@@ -1,9 +1,10 @@
 <template>
     <div class="about">
         <h1>Manage Teams</h1>
-        <router-link to="/addTeam" tag="button">Add team</router-link>
+        <router-link to="/addTeam" tag="button" class="baseButton">Add team</router-link>
         <br /><br />
-        <div id="teamTable">
+        <div id="loader" class="table-center"></div>
+        <div id="teamTable" style="overflow-x:auto;">
             <table id="table" class="table-center">
                 <tr>
                     <th>idPlayer</th>
@@ -13,7 +14,7 @@
                 <tr v-for="info in infos" :key="info">
                     <td>{{info.idPlayer}}</td>
                     <td>{{info.name}}
-                    <td><router-link :to="'/gameHistory/' + info.idPlayer" tag="button">(?)</router-link></td>
+                    <td><router-link :to="'/gameHistory/' + info.idPlayer" tag="button" class="baseButton">?</router-link></td>
                 </tr>
             </table>
         </div>
@@ -32,9 +33,14 @@
             }
         },
         mounted () {
+            document.getElementById("teamTable").hidden = true;
             axios
                 .get("https://audaciaballapi20200911031401.azurewebsites.net/GetTeams")
-                .then(response => (this.infos = response.data))
+                .then((response) => {
+                    this.infos = response.data;
+                    document.getElementById("loader").hidden = true;
+                    document.getElementById("teamTable").hidden = false;
+                })
         }
     }
 

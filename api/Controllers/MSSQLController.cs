@@ -12,7 +12,7 @@ using System.Net.Http;
 
 namespace AudaciaBallAPI.Controllers
 {
-    [EnableCors(origins: "https://audaciaballui.herokuapp.com", headers: "*", methods: "*")]
+    [EnableCors(origins: "http://localhost:8080", headers: "*", methods: "*")]
     public class MssqlController : ApiController
     {
         private MssqlRepository mssqlRepository;
@@ -79,23 +79,34 @@ namespace AudaciaBallAPI.Controllers
 
         [System.Web.Http.Route("getGameHistory/{idPlayer}")]
         [System.Web.Http.HttpGet]
-        public List<Game> GetGameHistory(int idPlayer)
+        public List<GamePlayer> GetGameHistory(int idPlayer)
         {
             this.mssqlRepository = new MssqlRepository();
-            List<Game> results = this.mssqlRepository.GetGameHistory(idPlayer);
+            List<GamePlayer> results = this.mssqlRepository.GetGameHistory(idPlayer);
 
             return results;
         }
 
         [System.Web.Http.Route("getGames")]
         [System.Web.Http.HttpGet]
-        public List<Game> GetGames()
+        public List<GamePlayer> GetGames()
         {
             this.mssqlRepository = new MssqlRepository();
-            List<Game> results = this.mssqlRepository.GetGames();
+            List<GamePlayer> results = this.mssqlRepository.GetGamesPlayers();
             return results;
 
         }
+
+        [System.Web.Http.Route("getGamesStats")]
+        [System.Web.Http.HttpGet]
+        public List<GameStats> GetGamesStats()
+        {
+            this.mssqlRepository = new MssqlRepository();
+            List<GameStats> results = this.mssqlRepository.GetGamesStats();
+            return results;
+
+        }
+
 
         [System.Web.Http.Route("getPlayers")]
         [System.Web.Http.HttpGet]

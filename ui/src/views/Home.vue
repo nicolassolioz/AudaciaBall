@@ -1,30 +1,42 @@
 <template>
     <div class="home">
-        <router-link to="/gameType" tag="button">New Game</router-link>
+        <router-link to="/gameType" tag="button" class="newButton">New Game</router-link>
         <br /><br/>
+        <router-link to="/totalGameHistory" tag="button" class="baseButton">See all games played</router-link>
+        <router-link to="/managePlayers" tag="button" class="baseButton">Manage players</router-link>
+        <router-link to="/manageTeams" tag="button" class="baseButton">Manage teams</router-link>
+        <br /><br />
+        <div id="loader" class="table-center"></div>
         <div id="scoreboard">
-            <table id="table" class="table-center">
-                    <tr>
-                        <th>idGame</th>
-                        <th>score red</th>
-                        <th>score blue</th>
-                        <th>blue team</th>
-                        <th>red team</th>
-                        <th>date</th>
-                    </tr>
-                    <tr v-for="info in infos" :key="info">
-                        <td>{{info.idGame}}</td>
-                        <td>{{info.scoreRed}}</td>
-                        <td>{{info.scoreBlue}}</td>
-                        <td>{{info.fk_idPlayerRed}}</td>
-                        <td>{{info.fk_idPlayerBlue}}</td>
-                        <td>{{info.gameDate}}</td>
-                    </tr>
-            </table>
+            <br />
+            <div style="overflow-x:auto;">
+                <table id="table" class="table-center">
+                        <tr>
+                            <th>Team/Player Name</th>
+                            <th>Games Played</th>
+                            <th>Wins</th>
+                            <th>Losses</th>
+                            <th>Ties</th>
+                            <th>Win Ratio</th>
+                            <th>Goals scored</th>
+                            <th>Goals against</th>
+                            <th>Goal difference</th>
+                        </tr>
+                        <tr v-for="info in infos" :key="info">
+                            <td>{{info.playerName}}</td>
+                            <td>{{info.gamesPlayed}}</td>
+                            <td>{{info.wins}}</td>
+                            <td>{{info.losses}}</td>
+                            <td>{{info.ties}}</td>
+                            <td>{{getWinRatio(info.gamesPlayed, info.wins)}}</td>
+                            <td>{{info.gf}}</td>
+                            <td>{{info.ga}}</td>
+                            <td>{{info.gf-info.ga}}</td>
+                        </tr>
+                </table>
+            </div>
         </div>
         <br/><br/>
-        <router-link to="/managePlayers" tag="button">Manage players</router-link>
-        <router-link to="/manageTeams" tag="button">Manage teams</router-link>
     </div>
 </template>
 <script>
@@ -36,13 +48,30 @@ export default {
     el: "#table",
     data () {
         return {
-            infos: null
+            infos: null,
+            playerName: null
         }
     },
     mounted () {
+        document.getElementById("scoreboard").hidden = true;
         axios
-            .get("https://audaciaballapi20200911031401.azurewebsites.net/GetGames")
-            .then(response => (this.infos = response.data))
+            .get("https://audaciaballapi20200911031401.azurewebsites.net/GetGamesStats")
+            .then((response) => {
+                this.infos = response.data;
+                document.getElementById("loader").hidden = true;
+                document.getElementById("scoreboard").hidden = false;
+            })
+    },
+    methods: {
+        getWinRatio(totalGames, wins) {
+            if(totalGames == 0)
+                return 0;
+            else
+                return Math.round(wins/totalGames*100)/100;
+        }
+    },
+    computed: {
+
     }
 }
 
