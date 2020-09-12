@@ -1,3 +1,5 @@
+<!-- Created by Nicolas Solioz -->
+<!-- Last edited : 2020-09-12 -->
 <template>
     <div class="about">
         <h1>Add player</h1>
@@ -22,6 +24,7 @@
 
     export default {
         methods: {
+            //call API to add player on database
             addPlayer() {
                 var playerName = document.getElementById("playerName").value;
 

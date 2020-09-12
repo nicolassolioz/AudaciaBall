@@ -1,3 +1,6 @@
+<!-- Created by Nicolas Solioz -->
+<!-- Last edited : 2020-09-12 -->
+
 <template>
   <div class="about">
     <h1>Audacia Ball</h1>

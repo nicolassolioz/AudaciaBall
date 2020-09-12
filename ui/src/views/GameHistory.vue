@@ -1,3 +1,5 @@
+<!-- Created by Nicolas Solioz -->
+<!-- Last edited 2020-09-12 -->
 <template>
     <div class="home">
         <h1>Game History of {{player.name}}</h1>
@@ -36,6 +38,7 @@
             }
         },
         mounted () {
+            //get games played by the player in url
             axios
                 .get("https://audaciaballapi20200911031401.azurewebsites.net/GetGameHistory/" + this.$route.params.id)
                 .then((response) => {
@@ -43,6 +46,7 @@
 
                 })
 
+            //get player in url
             axios
                 .get("https://audaciaballapi20200911031401.azurewebsites.net/GetPlayer/" + this.$route.params.id)
                 .then((response) => {

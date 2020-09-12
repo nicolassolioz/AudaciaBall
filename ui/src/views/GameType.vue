@@ -1,3 +1,7 @@
+<!-- Created by Nicolas Solioz -->
+<!-- Last edited 2020-09-12 -->
+
+<!-- choose if you want to play 1v1 (player vs player) or 2v2 (team vs team) -->
 <template>
     <div class="about">
         <h1>Game type</h1>

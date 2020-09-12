@@ -1,3 +1,5 @@
+<!-- Created by Nicolas Solioz -->
+<!-- Last edited 2020-09-12 -->
 <template>
     <div class="about">
         <h1>ManagePlayers</h1>
@@ -25,14 +27,14 @@
     import axios from 'axios';
 
     export default {
-        name: 'Example component',
-        el: "#table",
         data () {
             return {
                 infos: null
             }
         },
         mounted () {
+            //hide table and wait for API to return data and then hide loader
+            //get players from API
             document.getElementById("playerTable").hidden = true;
             axios
                 .get("https://audaciaballapi20200911031401.azurewebsites.net/GetPlayers")

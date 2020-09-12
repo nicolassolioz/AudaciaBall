@@ -1,3 +1,5 @@
+<!-- Created by Nicolas Solioz -->
+<!-- Last edited 2020-09-12 -->
 <template>
     <div class="home">
         <router-link to="/gameType" tag="button" class="newButton">New Game</router-link>
@@ -44,8 +46,6 @@
 import axios from 'axios';
 
 export default {
-    name: 'Example component',
-    el: "#table",
     data () {
         return {
             infos: null,
@@ -53,6 +53,8 @@ export default {
         }
     },
     mounted () {
+        //hide table and wait for API to return data and then hide loader
+        //get statistics from API
         document.getElementById("scoreboard").hidden = true;
         axios
             .get("https://audaciaballapi20200911031401.azurewebsites.net/GetGamesStats")
@@ -69,9 +71,6 @@ export default {
             else
                 return Math.round(wins/totalGames*100)/100;
         }
-    },
-    computed: {
-
     }
 }
 

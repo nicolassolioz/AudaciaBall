@@ -1,3 +1,6 @@
+<!-- Created by Nicolas Solioz -->
+<!-- Last edited : 2020-09-12 -->
+
 <template>
     <div class="about">
         <h1>Add team</h1>
@@ -51,11 +54,13 @@
             }
         },
         mounted () {
+            //on page load call API to get all players (to fill drop down list)
             axios
                 .get("https://audaciaballapi20200911031401.azurewebsites.net/GetPlayers")
                 .then(response => (this.infos = response.data))
         },
         methods: {
+            //call API to add team on database
             addTeam() {
                 var teamName = document.getElementById("teamName").value;
                 var player1 = document.getElementById("player1").value;

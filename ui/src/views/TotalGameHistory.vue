@@ -1,3 +1,5 @@
+<!-- Created by Nicolas Solioz -->
+<!-- Last edited 2020-09-12 -->
 <template>
     <div class="home">
         <h1>All games played</h1>
@@ -39,6 +41,8 @@
             }
         },
         mounted () {
+            //hide table and wait for API to return data and then hide loader
+            //get games from API
             document.getElementById("scoreboard").hidden = true;
             axios
                 .get("https://audaciaballapi20200911031401.azurewebsites.net/GetGames")
@@ -47,12 +51,6 @@
                     document.getElementById("loader").hidden = true;
                     document.getElementById("scoreboard").hidden = false;
                 })
-
-        },
-        methods: {
-
-        },
-        computed: {
 
         }
     }

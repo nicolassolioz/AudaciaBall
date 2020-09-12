@@ -1,3 +1,5 @@
+<!-- Created by Nicolas Solioz -->
+<!-- Last edited 2020-09-12 -->
 <template>
     <div class="about">
         <h1>{{winner}}</h1>
@@ -21,6 +23,7 @@
             var scoreBlue = this.$route.params.scoreBlue;
             var scoreRed = this.$route.params.scoreRed;
 
+            //check for winner based on url parameter
             if(scoreBlue>scoreRed)
             {
                 this.winner = "The blue team won!";
@@ -33,9 +36,6 @@
             {
                 this.winner = "It's a tie!";
             }
-        },
-        methods: {
-
         }
     }
 </script>

@@ -1,3 +1,5 @@
+<!-- Created by Nicolas Solioz -->
+<!-- Last edited 2020-09-12 -->
 <template>
     <div class="about">
         <h1>Game</h1>
@@ -40,8 +42,6 @@
     import axios from 'axios';
 
     export default {
-        name: 'Example component',
-        el: "#table",
         data () {
             return {
                 infos: null,
@@ -58,6 +58,7 @@
             this.scoreRed = this.$route.params.scoreRed;
         },
         methods: {
+            //add point to blue
             addBlue() {
                 var value = parseInt(document.getElementById('scoreBlue').value, 10);
                 value = isNaN(value) ? 0 : value;
@@ -66,6 +67,8 @@
                 value++;
                 document.getElementById('scoreBlue').value = value;
             },
+
+            //add point to red
             addRed() {
                 var value = parseInt(document.getElementById('scoreRed').value, 10);
                 value = isNaN(value) ? 0 : value;
@@ -74,6 +77,8 @@
                 value++;
                 document.getElementById('scoreRed').value = value;
             },
+
+            //remove point from blue
             removeBlue() {
                 var value = parseInt(document.getElementById('scoreBlue').value, 10);
                 value = isNaN(value) ? 0 : value;
@@ -82,6 +87,8 @@
                 value--;
                 document.getElementById('scoreBlue').value = value;
             },
+
+            //remove point from red
             removeRed() {
                 var value = parseInt(document.getElementById('scoreRed').value, 10);
                 value = isNaN(value) ? 0 : value;
@@ -90,6 +97,8 @@
                 value--;
                 document.getElementById('scoreRed').value = value;
             },
+
+            //insert game via API
             addGame() {
                 var scoreBlue = document.getElementById("scoreBlue").value;
                 var scoreRed = document.getElementById("scoreRed").value;

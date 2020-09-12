@@ -1,3 +1,6 @@
+//Created by Nicolas Solioz
+//Last Modified : 2020-09-12
+
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
@@ -81,6 +84,7 @@ const routes = [
     
 ]
 
+//router is used to manage the navigation between views
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,

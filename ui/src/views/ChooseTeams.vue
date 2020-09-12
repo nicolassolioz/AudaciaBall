@@ -1,3 +1,5 @@
+<!-- Created by Nicolas Solioz -->
+<!-- Last edited 2020-09-12 -->
 <template>
     <div class="about">
         <h1>Choose teams</h1>
@@ -77,8 +79,6 @@
     import axios from 'axios';
 
     export default {
-        name: 'Example component',
-        el: "#table",
         data () {
             return {
                 infos: null,
@@ -87,6 +87,7 @@
             }
         },
         mounted () {
+            //get all players that are a team with API
             axios
                 .get("https://audaciaballapi20200911031401.azurewebsites.net/GetTeams")
                 .then(response => (this.infos = response.data))
@@ -98,10 +99,12 @@
                 var startScoreBlue = document.getElementById("startScoreBlue").value;
                 var startScoreRed = document.getElementById("startScoreRed").value;
 
+                //check that the teams are not the same
                 if (playerBlue == playerRed) {
                     alert("You can't play against yourself, silly!");
                     return;
                 }
+                //open game vue with desired parameters
                 window.location.href = '/Game/'+startScoreBlue+'/'+startScoreRed+'/'+playerBlue+'/'+playerRed;
             }
         }
